@@ -9,7 +9,7 @@
     name: "{{ item }}"
     state: present
     update_cache: true
-  loop: "{{ packages }}"
+  loop: "{{ server_base_packages }}"
 
 - name: Add Periodic Configuration
   ansible.builtin.copy:

@@ -2,3 +2,4 @@
 /*/group_vars/all.yml
 hosts
 /venv
+.vscode
