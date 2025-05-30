@@ -1,20 +1,25 @@
 ---
 - name: Create scripts directory
-  file:
-    path: '/home/forge/scripts'
+  ansible.builtin.file:
+    path: "/home/forge/scripts"
     state: directory
-    owner: 'forge'
-    group: 'forge'
+    owner: "forge"
+    group: "forge"
+    mode: "0755"
 
 - name: Create reload script
-  template:
+  ansible.builtin.template:
     src: files/reload.sh
-    dest: '/home/forge/scripts/reload.sh'
-    owner: 'forge'
-    group: 'forge'
-    mode: 0755
+    dest: "/home/forge/scripts/reload.sh"
+    owner: "forge"
+    group: "forge"
+    mode: "0755"
 
 - name: Give permissions to reload php and supervisor
-  template:
+  ansible.builtin.template:
     src: templates/sudoers.j2
     dest: "/etc/sudoers.d/supervisor"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: "visudo -cf %s"

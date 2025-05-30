@@ -1,20 +1,33 @@
 ---
-- stat: path=/etc/letsencrypt/live/{{ uri }}/fullchain.pem
+- name: Check SSL certificate status
+  ansible.builtin.stat:
+    path: /etc/letsencrypt/live/{{ nginx_uri }}/fullchain.pem
   register: fullchain
 
-- name: Create SSL certificates
-  command: certbot certonly --webroot -w /tmp/letsencrypt -d {{ uri }} --agree-tos -m {{ mail }}
-  when: (ssl == True) and (subdomain != 'www') and (fullchain.stat.exists == False)
+- name: Create SSL certificates for non-www domain
+  ansible.builtin.command:
+    cmd: certbot certonly --webroot -w /tmp/letsencrypt -d {{ nginx_uri }} --agree-tos -m {{ mail }}
+  when:
+    - ssl
+    - subdomain != 'www'
+    - not fullchain.stat.exists
+  changed_when: true
 
-- name: Create SSL certificates
-  command: certbot certonly --webroot -w /tmp/letsencrypt -d {{ uri }} -d {{ domain }} --agree-tos -m {{ mail }}
-  when: (ssl == True) and (subdomain == 'www') and (fullchain.stat.exists == False)
+- name: Create SSL certificates for www domain
+  ansible.builtin.command:
+    cmd: certbot certonly --webroot -w /tmp/letsencrypt -d {{ nginx_uri }} -d {{ domain }} --agree-tos -m {{ mail }}
+  when:
+    - ssl
+    - subdomain == 'www'
+    - not fullchain.stat.exists
+  changed_when: true
 
 - name: Deploy nginx site ssl config
-  template:
+  ansible.builtin.template:
     src: templates/subdomain-ssl-active.conf.j2
-    dest: '/etc/nginx/sites-available/{{ uri }}.conf'
-    owner: '{{ user }}'
-  when: ssl == True
-  notify:
-    - Restart nginx
+    dest: "/etc/nginx/sites-available/{{ nginx_uri }}.conf"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
+  when: ssl
+  notify: Restart nginx

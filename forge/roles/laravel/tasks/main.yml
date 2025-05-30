@@ -1,45 +1,51 @@
 ---
 - name: Create default directories
-  file:
-    path: '{{ item }}'
+  ansible.builtin.file:
+    path: "{{ item }}"
     state: directory
-    owner: 'forge'
-    group: 'forge'
-  with_items:
-    - '/home/forge/{{ website }}/releases'
-    - '/home/forge/{{ website }}/persistent'
+    owner: "forge"
+    group: "forge"
+    mode: "0755"
+  loop:
+    - "/home/forge/{{ website }}/releases"
+    - "/home/forge/{{ website }}/persistent"
 
 - name: Create persistent app storage directory
-  file:
-    path: '/home/forge/{{ website }}/persistent/storage/app/public'
+  ansible.builtin.file:
+    path: "/home/forge/{{ website }}/persistent/storage/app/public"
     state: directory
-    owner: 'forge'
-    group: 'forge'
+    owner: "forge"
+    group: "forge"
+    mode: "0755"
 
 - name: Create persistent log storage directory
-  file:
-    path: '/home/forge/{{ website }}/persistent/storage/logs'
+  ansible.builtin.file:
+    path: "/home/forge/{{ website }}/persistent/storage/logs"
     state: directory
-    owner: 'forge'
-    group: 'forge'
+    owner: "forge"
+    group: "forge"
+    mode: "0755"
 
 - name: Create persistent framework cache storage directory
-  file:
-    path: '/home/forge/{{ website }}/persistent/storage/framework/cache'
+  ansible.builtin.file:
+    path: "/home/forge/{{ website }}/persistent/storage/framework/cache"
     state: directory
-    owner: 'forge'
-    group: 'forge'
+    owner: "forge"
+    group: "forge"
+    mode: "0755"
 
 - name: Create persistent framework session storage directory
-  file:
-    path: '/home/forge/{{ website }}/persistent/storage/framework/sessions'
+  ansible.builtin.file:
+    path: "/home/forge/{{ website }}/persistent/storage/framework/sessions"
     state: directory
-    owner: 'forge'
-    group: 'forge'
+    owner: "forge"
+    group: "forge"
+    mode: "0755"
 
 - name: Create persistent framework views storage directory
-  file:
-    path: '/home/forge/{{ website }}/persistent/storage/framework/views'
+  ansible.builtin.file:
+    path: "/home/forge/{{ website }}/persistent/storage/framework/views"
     state: directory
-    owner: 'forge'
-    group: 'forge'
+    owner: "forge"
+    group: "forge"
+    mode: "0755"

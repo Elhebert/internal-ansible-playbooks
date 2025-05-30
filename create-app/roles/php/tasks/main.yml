@@ -1,29 +1,39 @@
 ---
 - name: Deploy php-fpm pool config
-  template:
+  ansible.builtin.template:
     src: templates/php-fpm-pool.conf.j2
-    dest: '/etc/php/7.2/fpm/pool.d/{{ app_name }}.conf'
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    dest: "/etc/php/8.4/fpm/pool.d/{{ app_name }}.conf"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
 
 - name: Deploy init.d script
-  template:
+  ansible.builtin.template:
     src: templates/init.d.j2
-    dest: '/etc/init.d/php7.2-fpm-{{ app_name }}'
-    mode: 0755
+    dest: "/etc/init.d/php8.4-fpm-{{ app_name }}"
+    owner: root
+    group: root
+    mode: "0755"
 
 - name: Create user reload script
-  template:
+  ansible.builtin.template:
     src: templates/reload_php-fpm.sh.j2
-    dest: '/home/{{ user }}/scripts/reload_php-fpm.sh'
-    owner: '{{ user }}'
-    group: '{{ user }}'
-    mode: 0755
+    dest: "/home/{{ user }}/scripts/reload_php-fpm.sh"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0755"
 
 - name: Give user permissions to reload their php process
-  template:
+  ansible.builtin.template:
     src: templates/sudoers.j2
     dest: "/etc/sudoers.d/{{ user | regex_replace('-', '') }}"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: "visudo -cf %s"
 
 - name: Start app php pool
-  shell: '/etc/init.d/php7.2-fpm-{{ app_name }} start'
+  ansible.builtin.systemd:
+    name: "php8.4-fpm-{{ app_name }}"
+    state: started
+    enabled: true

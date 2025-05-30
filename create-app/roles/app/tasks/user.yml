@@ -1,24 +1,27 @@
 ---
 - name: Create app user
-  user:
-    name: '{{ user }}'
-    password: '{{ passwd }}'
+  ansible.builtin.user:
+    name: "{{ user }}"
+    password: '{{ passwd | password_hash("sha512") }}'
     shell: /bin/zsh
     state: present
-    generate_ssh_key: yes
+    generate_ssh_key: true
     ssh_key_bits: 4096
     ssh_key_file: .ssh/github
     ssh_key_comment: digital@actstar.com
 
 - name: Add ssh config to app user
-  copy:
+  ansible.builtin.copy:
     src: files/ssh_config
-    dest: '/home/{{ user }}/.ssh/config'
+    dest: "/home/{{ user }}/.ssh/config"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0600"
 
 - name: Enable remote access to app user
-  authorized_key:
-    user: '{{ user }}'
-    key: '{{ item }}'
-  with_items:
+  ansible.posix.authorized_key:
+    user: "{{ user }}"
+    key: "{{ item }}"
+  loop:
     - "{{ lookup('file', 'd.stinglhamber.pub') }}"
     - "{{ lookup('file', 'm.merah.pub') }}"

@@ -1,4 +1,7 @@
 ---
-- include: install.yml
-- include: config.yml
-- include: composer.yml
+- Name: Install PHP
+  ansible.builtin.include_tasks: install.yml
+- Name: Config
+  ansible.builtin.include_tasks: config.yml
+- Name: Composer
+  ansible.builtin.include_tasks: composer.yml

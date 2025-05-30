@@ -1,28 +1,31 @@
 ---
-- name: Create sources.list.d/mysql.list file
-  copy:
+- name: Create MySQL repository configuration
+  ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/mysql.list
     src: files/mysql.list
+    mode: "0644"
 
-- name: Add mysql apt-key
-  apt_key:
-    url: 'https://repo.mysql.com/RPM-GPG-KEY-mysql'
+- name: Add MySQL APT key
+  ansible.builtin.apt_key:
+    url: "https://repo.mysql.com/RPM-GPG-KEY-mysql"
     state: present
 
-- name: Install mysql
-  apt:
-    package: mysql-server
+- name: Install MySQL server
+  ansible.builtin.apt:
+    name: mysql-server
     state: present
-    update_cache: yes
+    update_cache: true
 
-- name: Create mysql configuration file
-  copy:
+- name: Configure MySQL
+  ansible.builtin.copy:
     src: files/mysql.cnf
     dest: /etc/my.cnf
-  notify:
-    - Restart mysql
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Restart MySQL
 
-- name: install python mysql bindings
-  apt:
-    name: python-mysqldb
+- name: Install Python MySQL bindings
+  ansible.builtin.apt:
+    name: python3-mysqldb
     state: present

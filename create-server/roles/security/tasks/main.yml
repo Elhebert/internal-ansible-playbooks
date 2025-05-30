@@ -1,11 +1,14 @@
 ---
-- include: sudo.yml
-- include: ufw.yml
+- name: Include sudo configuration
+  ansible.builtin.import_tasks: sudo.yml
+
+- name: Include UFW configuration
+  ansible.builtin.import_tasks: ufw.yml
 
 - name: Harden TCP/IP stack against SYN floods
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.tcp_syncookies
     value: 1
-    sysctl_set: yes
+    sysctl_set: true
     state: present
-    reload: yes
+    reload: true

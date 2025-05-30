@@ -1,34 +1,37 @@
 ---
-- name: Get php gpg key
-  get_url:
+- name: Get PHP GPG key
+  ansible.builtin.get_url:
     url: https://packages.sury.org/php/apt.gpg
     dest: /etc/apt/trusted.gpg.d/php.gpg
-    mode: 0755
+    mode: "0644"
 
-- name: Create sources.list.d/php.list file
-  copy:
+- name: Create PHP repository configuration
+  ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/php.list
     src: files/php.list
+    mode: "0644"
+    owner: root
+    group: root
 
-- name: Update apt cache
-  apt:
+- name: Update APT cache
+  ansible.builtin.apt:
     update_cache: true
 
-- name: Install php
-  apt:
-    package: '{{ item }}'
+- name: Install PHP packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
     state: present
-    update_cache: yes
-  with_items:
-    - php7.2
-    - php7.2-cli
-    - php7.2-json
-    - php7.2-mysql
-    - php7.2-xml
-    - php7.2-mbstring
-    - php7.2-curl
-    - php7.2-zip
-    - php7.2-gd
-    - php7.2-imagick
-    - php7.2-fpm
-  notify: Start PHP7.2-FPM
+    update_cache: true
+  loop:
+    - php8.4
+    - php8.4-cli
+    - php8.4-json
+    - php8.4-mysql
+    - php8.4-xml
+    - php8.4-mbstring
+    - php8.4-curl
+    - php8.4-zip
+    - php8.4-gd
+    - php8.4-imagick
+    - php8.4-fpm
+  notify: Start PHP-FPM

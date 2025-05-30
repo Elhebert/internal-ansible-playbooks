@@ -1,3 +1,5 @@
 ---
-- include: vhost.yml
-- include: ssl.yml
+- name: VHost
+  ansible.builtin.include_tasks: vhost.yml
+- name: SSL
+  ansible.builtin.include_tasks: ssl.yml

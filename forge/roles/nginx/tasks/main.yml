@@ -1,10 +1,16 @@
 ---
 - name: Implement asset caching
-  copy:
+  ansible.builtin.copy:
     src: files/assets-caching.conf
     dest: "/etc/nginx/forge-conf/{{ website }}/server/assets-caching.conf"
+    owner: root
+    group: root
+    mode: "0644"
 
 - name: Add security headers
-  copy:
+  ansible.builtin.copy:
     src: files/headers.conf
     dest: "/etc/nginx/forge-conf/{{ website }}/server/headers.conf"
+    owner: root
+    group: root
+    mode: "0644"

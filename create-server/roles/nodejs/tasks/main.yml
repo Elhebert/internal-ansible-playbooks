@@ -1,33 +1,20 @@
 ---
-- name: Get nodejs 8.x debian sources
-  get_url:
-    url: https://deb.nodesource.com/setup_8.x
+- name: Download Node.js setup script
+  ansible.builtin.get_url:
+    url: https://deb.nodesource.com/setup_22.x
     dest: /tmp/node_setup
-    mode: 0755
+    mode: "0755"
+    owner: root
+    group: root
 
-- name: Add nodejs 8.x sources
-  command: ./node_setup
+- name: Configure Node.js repository
+  ansible.builtin.command: ./node_setup
   args:
     chdir: /tmp/
+  changed_when: false
 
-- name: Install nodejs
-  apt:
-    package: nodejs
+- name: Install Node.js
+  ansible.builtin.apt:
+    name: nodejs
     state: present
-    update_cache: yes
-
-- name: Get yarn gpg key
-  apt_key:
-    url: https://dl.yarnpkg.com/debian/pubkey.gpg
-    state: present
-
-- name: Create sources.list.d/yarn.list file
-  copy:
-    dest: /etc/apt/sources.list.d/yarn.list
-    src: files/yarn.list
-
-- name: Install yarn
-  apt:
-    package: yarn
-    state: present
-    update_cache: yes
+    update_cache: true

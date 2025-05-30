@@ -1,5 +1,9 @@
 ---
-- include: hostname.yml
-- include: packages.yml
-- include: timezone.yml
-- include: ssl_certificate.yml
+- name: Hostname
+  ansible.builtin.include_tasks: hostname.yml
+- Name: Install packages
+  ansible.builtin.include_tasks: packages.yml
+- Name: Timezone
+  ansible.builtin.include_tasks: timezone.yml
+- Name: SSL Certifiate
+  ansible.builtin.include_tasks: ssl_certificate.yml

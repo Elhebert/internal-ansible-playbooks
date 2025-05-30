@@ -1,13 +1,13 @@
 # Ansible playbooks
 
-A collection of ansible playbooks used internally.
+A collection of ansible playbooks used internally.  
 
 ## Usage
 
 Clone this repository
 
 ```bash
-$ git clone https://github.com/Altavia-ACT/internal-ansible-playbooks.git
+$ git clone https://github.com/Elhebert/internal-ansible-playbooks.git
 ```
 
 Run the playbook with

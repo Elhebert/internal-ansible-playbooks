@@ -1,61 +1,70 @@
 ---
 - name: Create persistent app storage directory
-  file:
-    path: '/home/{{ user }}/persistent/storage/app/public'
+  ansible.builtin.file:
+    path: "/home/{{ user }}/persistent/storage/app/public"
     state: directory
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
 
 - name: Create persistent log storage directory
-  file:
-    path: '/home/{{ user }}/persistent/storage/logs'
+  ansible.builtin.file:
+    path: "/home/{{ user }}/persistent/storage/logs"
     state: directory
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
 
 - name: Create persistent framework cache storage directory
-  file:
-    path: '/home/{{ user }}/persistent/storage/framework/cache'
+  ansible.builtin.file:
+    path: "/home/{{ user }}/persistent/storage/framework/cache"
     state: directory
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
 
 - name: Create persistent framework session storage directory
-  file:
-    path: '/home/{{ user }}/persistent/storage/framework/sessions'
+  ansible.builtin.file:
+    path: "/home/{{ user }}/persistent/storage/framework/sessions"
     state: directory
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
 
 - name: Create persistent framework views storage directory
-  file:
-    path: '/home/{{ user }}/persistent/storage/framework/views'
+  ansible.builtin.file:
+    path: "/home/{{ user }}/persistent/storage/framework/views"
     state: directory
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
 
 - name: Create persistent config directory
-  file:
-    path: '/home/{{ user }}/persistent/config'
+  ansible.builtin.file:
+    path: "/home/{{ user }}/persistent/config"
     state: directory
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
 
 - name: Create env file
-  template:
+  ansible.builtin.template:
     src: templates/env.j2
-    dest: '/home/{{ user }}/persistent/config/env'
-    owner: '{{ user }}'
-    group: '{{ user }}'
+    dest: "/home/{{ user }}/persistent/config/env"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
 
 - name: Create supervisor configuration
-  become: yes
-  template:
+  become: true
+  ansible.builtin.template:
     src: templates/supervisor.j2
-    dest: '/etc/supervisor/conf.d/{{ app_name }}-worker.conf'
-  when: (horizon == True)
+    dest: "/etc/supervisor/conf.d/{{ app_name }}-worker.conf"
+    mode: "0644"
+  when: horizon sameas true
 
 - name: Define scheduler cron job
-  cron:
-    job: 'php /home/{{ user }}/current/artisan schedule:run >> /dev/null 2>&1'
-    user: '{{ user }}'
+  ansible.builtin.cron:
+    job: "php /home/{{ user }}/current/artisan schedule:run >> /dev/null 2>&1"
+    user: "{{ user }}"
+    name: "{{ user }}-horizon"

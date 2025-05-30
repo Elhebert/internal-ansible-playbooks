@@ -1,16 +1,26 @@
+---
 - name: Set timezone
-  copy:
+  ansible.builtin.copy:
     content: CET
     dest: /etc/timezone
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
 
-- name: Remove existing localtime configuration file
-  file: path=/etc/localtime state=absent
+- name: Remove existing localtime configuration
+  ansible.builtin.file:
+    path: /etc/localtime
+    state: absent
 
-- name: Set localtime to CET
-  file: src=/usr/share/zoneinfo/CET dest=/etc/localtime state=link owner=root group=root mode=0644
+- name: Configure system timezone
+  ansible.builtin.file:
+    src: /usr/share/zoneinfo/CET
+    dest: /etc/localtime
+    state: link
+    owner: root
+    group: root
+    mode: "0644"
 
-- name: Reconfigure tzdata
-  command: dpkg-reconfigure -f noninteractive tzdata
+- name: Update timezone configuration
+  ansible.builtin.command: dpkg-reconfigure -f noninteractive tzdata
+  changed_when: false
