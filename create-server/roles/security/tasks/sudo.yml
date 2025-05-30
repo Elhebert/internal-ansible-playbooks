@@ -1,15 +1,19 @@
 ---
 - name: Change root password
-  user:
+  ansible.builtin.user:
     name: root
-    password: '{{ root_passwd }}'
+    password: "{{ root_passwd | password_hash('sha512') }}"
 
-- name: Lock the root user (use 'sudo passwd root' to re-enable)
-  command: passwd -l root
+- name: Lock root user account
+  ansible.builtin.command: passwd -l root
+  changed_when: false
 
 - name: Remove sudo group rights
-  lineinfile:
-    dest: /etc/sudoers
-    regexp: '^%sudo'
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    regexp: "^%sudo"
     state: absent
-    validate: 'visudo -cf %s'
+    validate: "visudo -cf %s"
+    mode: "0440"
+    owner: root
+    group: root

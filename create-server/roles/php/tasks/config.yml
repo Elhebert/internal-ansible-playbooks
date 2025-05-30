@@ -1,44 +1,50 @@
 ---
 - name: Remove default php-fpm pool
-  file:
-    path: /etc/php/7.1/fpm/pool.d/www.conf
+  ansible.builtin.file:
+    path: /etc/php/8.4/fpm/pool.d/www.conf
     state: absent
   notify:
-    - Restart PHP7.2-FPM
+    - Restart PHP8.4-FPM
 
 - name: Create php-fpm pool directory
-  file:
-    path: /etc/php/7.1/fpm/pool.d
+  ansible.builtin.file:
+    path: /etc/php/8.4/fpm/pool.d
     state: directory
     owner: www-data
+    mode: "0644"
 
 - name: Create php-fpm log directory
-  file:
+  ansible.builtin.file:
     path: /var/log/php-fpm
     state: directory
     owner: www-data
+    mode: "0644"
 
 - name: Create php log directory
-  file:
+  ansible.builtin.file:
     path: /var/log/php
     state: directory
     owner: www-data
+    mode: "0644"
 
 - name: Create php upload directory
-  file:
+  ansible.builtin.file:
     path: /var/lib/php/upload
     state: directory
     owner: www-data
+    mode: "0644"
 
 - name: Create php session directory
-  file:
+  ansible.builtin.file:
     path: /var/lib/php/session
     state: directory
     owner: www-data
+    mode: "0644"
 
 - name: Modify php.ini settings
-  copy:
+  ansible.builtin.copy:
     src: files/php.ini
-    dest: /etc/php/7.1/fpm/php.ini
+    dest: /etc/php/8.4/fpm/php.ini
+    mode: "0644"
   notify:
-    - Restart PHP7.2-FPM
+    - Restart PHP8.4-FPM

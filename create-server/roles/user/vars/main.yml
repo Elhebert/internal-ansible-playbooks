@@ -1,5 +1,5 @@
 ---
-users:
+user_users:
   - username: d.stinglhamber
     sudoers: dstinglhamber
     password: !vault |

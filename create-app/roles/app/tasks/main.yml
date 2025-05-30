@@ -1,3 +1,5 @@
 ---
-- include: user.yml
-- include: directories.yml
+- name: Create and configure new user
+  ansible.builtin.include_tasks: user.yml
+- name: Create necessary directories
+  ansible.builtin.include_tasks: directories.yml

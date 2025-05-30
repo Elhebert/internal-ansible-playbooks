@@ -1,53 +1,52 @@
 ---
-- name: Install ufw
-  apt:
-    name: 'ufw'
+- name: Install UFW
+  ansible.builtin.apt:
+    name: ufw
     state: present
-    update_cache: yes
+    update_cache: true
 
-- name: Add default policies firewall
-  ufw:
-    direction: '{{ item.direction }}'
-    policy: '{{ item.policy }}'
-  with_items:
-    - { direction: 'incoming', policy: 'deny' }
-    - { direction: 'outgoing', policy: 'allow' }
+- name: Configure default firewall policies
+  community.general.ufw:
+    direction: "{{ item.direction }}"
+    policy: "{{ item.policy }}"
+  loop:
+    - { direction: "incoming", policy: "deny" }
+    - { direction: "outgoing", policy: "allow" }
 
-- name: Configure ssh rule with ip restriction
-  ufw:
+- name: Configure SSH rule with IP restriction
+  community.general.ufw:
     rule: allow
     port: 22
     proto: tcp
-    from_ip: '{{ ufw_from_ip }}'
+    from_ip: "{{ ufw_from_ip }}"
     direction: in
   when: ufw_from_ip is defined
 
-- name: Configure ssh rule without ip restriction
-  ufw:
+- name: Configure SSH rule without IP restriction
+  community.general.ufw:
     rule: allow
     port: 22
     proto: tcp
     direction: in
   when: ufw_from_ip is undefined
 
-- name: Configure ufw rules
-  ufw:
+- name: Configure UFW rules
+  community.general.ufw:
     rule: allow
-    port: '{{ item.port }}'
-    proto: '{{ item.proto }}'
-    direction: '{{ item.direction }}'
-  with_items:
-    - { port: '80', proto: 'tcp', direction: 'in' }
-    - { port: '8443', proto: 'tcp', direction: 'in' }
-    - { port: '443', proto: 'tcp', direction: 'in' }
-    - { port: '53', proto: 'tcp', direction: 'in' }
+    port: "{{ item.port }}"
+    proto: "{{ item.proto }}"
+    direction: "{{ item.direction }}"
+  loop:
+    - { port: "80", proto: "tcp", direction: "in" }
+    - { port: "8443", proto: "tcp", direction: "in" }
+    - { port: "443", proto: "tcp", direction: "in" }
+    - { port: "53", proto: "tcp", direction: "in" }
 
-- name: Enable ufw logging
-  ufw:
-    logging: on
-  notify:
-    - Restart ufw
+- name: Enable UFW logging
+  community.general.ufw:
+    logging: "on"
+  notify: Restart UFW
 
-- name: Enable ufw
-  ufw:
+- name: Enable UFW
+  community.general.ufw:
     state: enabled

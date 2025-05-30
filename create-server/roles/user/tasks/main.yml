@@ -1,22 +1,25 @@
 ---
-- name: Add Admin Users
-  user:
-    name: '{{ item.username }}'
-    append: yes
-    password: '{{ item.password }}'
+- name: Add admin users
+  ansible.builtin.user:
+    name: "{{ item.username }}"
+    append: true
+    password: "{{ item.password | password_hash('sha512') }}"
     shell: /bin/zsh
-  with_items: '{{ users }}'
+  loop: "{{ user_users }}"
 
-- name: Enable Remote Access to admin users
-  authorized_key:
-    user: '{{ item.username }}'
-    key: '{{ item.public_key }}'
-  with_items: '{{ users }}'
+- name: Configure SSH keys for admin users
+  ansible.posix.authorized_key:
+    user: "{{ item.username }}"
+    key: "{{ item.public_key }}"
+    state: present
+  loop: "{{ user_users }}"
 
-- name: Create sudoers entries for admin users
-  template:
+- name: Configure sudo access for admin users
+  ansible.builtin.template:
     src: templates/sudoers.j2
-    dest: '/etc/sudoers.d/{{ item.sudoers }}'
-    mode: 0440
-    validate: 'visudo -cf %s'
-  with_items: '{{ users }}'
+    dest: "/etc/sudoers.d/{{ item.sudoers }}"
+    mode: "0440"
+    owner: root
+    group: root
+    validate: "visudo -cf %s"
+  loop: "{{ user_users }}"

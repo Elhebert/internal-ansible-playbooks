@@ -1,4 +1,5 @@
-packages:
+---
+server_base_packages:
   - acl
   - unattended-upgrades
   - policykit-1

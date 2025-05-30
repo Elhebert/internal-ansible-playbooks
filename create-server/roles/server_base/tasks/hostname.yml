@@ -1,0 +1,22 @@
+---
+- name: Write hostname to /etc/hostname
+  ansible.builtin.copy:
+    content: "{{ hostname }}"
+    dest: /etc/hostname
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Set system hostname
+  ansible.builtin.hostname:
+    name: "{{ hostname }}"
+
+- name: Configure localhost in hosts file
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    regexp: "^127\\.0\\.0\\.1"
+    line: "127.0.0.1 localhost {{ hostname }}"
+    owner: root
+    group: root
+    mode: "0644"
+    state: present

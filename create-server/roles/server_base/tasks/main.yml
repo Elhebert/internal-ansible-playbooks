@@ -1,0 +1,9 @@
+---
+- name: Hostname
+  ansible.builtin.include_tasks: hostname.yml
+- name: APT packages and updates
+  ansible.builtin.include_tasks: packages.yml
+- name: Timezone
+  ansible.builtin.include_tasks: timezone.yml
+- name: SSL Certifiate
+  ansible.builtin.include_tasks: ssl_certificate.yml

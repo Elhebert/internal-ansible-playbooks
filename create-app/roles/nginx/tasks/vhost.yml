@@ -1,26 +1,31 @@
 ---
 - name: Deploy nginx site config
-  template:
+  ansible.builtin.template:
     src: templates/subdomain.conf.j2
-    dest: '/etc/nginx/sites-available/{{ uri }}.conf'
-    owner: '{{ user }}'
-  when: ssl == False
+    dest: "/etc/nginx/sites-available/{{ nginx_uri }}.conf"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
+  when: not ssl
 
 - name: Deploy nginx site ssl config
-  template:
+  ansible.builtin.template:
     src: templates/subdomain-ssl.conf.j2
-    dest: '/etc/nginx/sites-available/{{ uri }}.conf'
-    owner: '{{ user }}'
-  when: ssl == True
+    dest: "/etc/nginx/sites-available/{{ nginx_uri }}.conf"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
+  when: ssl
 
 - name: Activate nginx site
-  file:
-    src: '/etc/nginx/sites-available/{{ uri }}.conf'
-    dest: '/etc/nginx/sites-enabled/{{ uri }}.conf'
+  ansible.builtin.file:
+    src: "/etc/nginx/sites-available/{{ nginx_uri }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ nginx_uri }}.conf"
     state: link
-    owner: '{{ user }}'
+    owner: "{{ user }}"
+    group: "{{ user }}"
 
 - name: Restart nginx
-  service:
+  ansible.builtin.service:
     name: nginx
     state: restarted

@@ -1,13 +1,19 @@
 ---
-- hosts: web
-  become: yes
+- name: Provision web server
+  hosts: web
+  become: true
+  gather_facts: true
   roles:
-    - server-base
-    - user
-    - ssh
-    - security
-    - nginx
-    - { role: php, when: php != False }
-    - { role: redis, when: redis != False }
-    - { role: nodejs, when: nodejs != False }
-    - { role: mysql, when: mysql != False }
+    - role: server_base
+    - role: user
+    - role: ssh
+    - role: security
+    - role: nginx
+    - role: php
+      when: php is sameas true
+    - role: redis
+      when: redis is sameas true
+    - role: nodejs
+      when: nodejs is sameas true
+    - role: mysql
+      when: mysql is sameas true

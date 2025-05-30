@@ -1,9 +1,14 @@
 ---
-- hosts: web
-  become: yes
+- name: Provision web application
+  hosts: web
+  become: true
+  gather_facts: true
   roles:
-    - app
-    - nginx
-    - { role: php, when: php != False }
-    - { role: laravel, when: laravel != False }
-    - { role: mysql, when: mysql != False }
+    - role: app
+    - role: nginx
+    - role: php
+      when: php is sameas true
+    - role: laravel
+      when: laravel is sameas true
+    - role: mysql
+      when: mysql is sameas true

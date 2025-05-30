@@ -1,9 +1,12 @@
 ---
 - name: Install Composer
-  get_url:
+  ansible.builtin.get_url:
     url: https://getcomposer.org/composer.phar
     dest: /usr/local/bin/composer
-    mode: 0755
+    mode: "0755"
+    owner: root
+    group: root
 
-- name: Composer Self Update
-  shell: /usr/local/bin/composer self-update
+- name: Update Composer
+  ansible.builtin.command: /usr/local/bin/composer self-update
+  changed_when: false
